@@ -1,4 +1,4 @@
-# seller
+# vue-seller
 
 > A Vue.js project
 
