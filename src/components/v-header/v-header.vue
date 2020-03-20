@@ -1,16 +1,14 @@
 <template>
-<div class="header">
+  <div class="header">
     header
-</div>
+  </div>
 </template>
 <script>
 export default {
-  name: "VHeader",
-  data () {
-    return {
-    };
+  name: 'VHeader',
+  data() {
+    return {}
   }
 }
 </script>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>
