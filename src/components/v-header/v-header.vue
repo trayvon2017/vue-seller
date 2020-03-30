@@ -1,7 +1,7 @@
 <template>
   <div class="header">
     <div class="bg-wrapper">
-      <img :src="seller.avatar" alt="" />
+      <img :src="seller.avatar" alt />
     </div>
     <div class="content-wrapper">
       <div class="avatar">
@@ -12,9 +12,7 @@
           <span class="brand"></span>
           <span class="name">{{ seller.name }}</span>
         </div>
-        <div class="desc">
-          {{ seller.description }}/{{ seller.deliveryTime }}分送达
-        </div>
+        <div class="desc">{{ seller.description }}/{{ seller.deliveryTime }}分送达</div>
         <div v-if="seller.supports" class="supports">
           <ico type="decrease_1"></ico>
           <span class="support-desc">{{ seller.supports[0].description }}</span>
@@ -25,14 +23,45 @@
         <i class="icon-keyboard_arrow_right"></i>
       </div>
     </div>
+    <div class="notice-wrapper">
+      <span class="notice-icon"></span>
+      <span class="notice-text">{{seller.bulletin}}</span>
+      <i class="icon-keyboard_arrow_right"></i>
+    </div>
+    <div class="detail-wrapper" v-show="showDetail">
+      <div class="detail-content-wrapper clearfix">
+        <div class="content">
+          <h1 class="name">{{seller.name}}</h1>
+          <div class="star-wrapper">
+            <star size="large" :score="seller.score"></star>
+          </div>
+          <div class="sub-title">
+            <div class="line"></div>
+            <div class="title">优惠信息</div>
+            <div class="line"></div>
+          </div>
+          <div
+            v-show="seller.supports"
+            v-for="(item,i) in seller.supports"
+            :key="i"
+            class="supports-wrapper"
+          >
+            <ico size="large" :type="`${supportsList[item.type]}_1`"></ico>
+          </div>
+        </div>
+      </div>
+      <div class="close-wrapper">2</div>
+    </div>
   </div>
 </template>
 <script>
 import Ico from 'components/ico/ico'
+import Star from 'components/star/star'
 export default {
   name: 'VHeader',
   components: {
-    Ico
+    Ico,
+    Star
   },
   props: {
     seller: {
@@ -43,7 +72,10 @@ export default {
     }
   },
   data() {
-    return {}
+    return {
+      showDetail: true,
+      supportsList: ['decrease', 'discount', 'guarantee', 'invoice', 'special']
+    }
   }
 }
 </script>
@@ -132,6 +164,92 @@ export default {
     z-index: -1;
     font-size: 0;
     filter: blur(10px);
+  }
+
+  .notice-wrapper {
+    position: relative;
+    height: 28px;
+    line-height: 28px;
+    padding: 0 22px 0 12px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    background-color: rgba(7, 17, 27, 0.2);
+    color: white;
+    .notice-icon {
+      display: inline-block;
+      vertical-align: top;
+      margin-top: 8px;
+      width: 22px;
+      height: 12px;
+      background-size: 22px 12px;
+      background-repeat: no-repeat;
+      background-position: center;
+      @include bg-image('./bulletin');
+    }
+    .notice-text {
+      vertical-align: middle;
+      margin: 0 4px;
+      font-size: 10px;
+    }
+
+    .icon-keyboard_arrow_right {
+      position: absolute;
+      top: 8px;
+      right: 12px;
+    }
+  }
+
+  .detail-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(7, 17, 27, 0.8);
+    z-index: 1;
+    overflow: auto;
+    color: white;
+    .detail-content-wrapper {
+      width: 100%;
+      min-height: 100%;
+      .content {
+        margin-top: 64px;
+        padding-bottom: 64px;
+        .name {
+          font-size: 16px;
+          font-weight: 700;
+          text-align: center;
+        }
+        .star-wrapper {
+          margin: 16px 0 28px 0;
+          text-align: center;
+        }
+        .sub-title {
+          display: flex;
+          margin: 0 auto;
+          width: 80%;
+          .title {
+            padding: 0 12px;
+            height: 14px;
+            font-size: 14px;
+            line-height: 14px;
+            color: #ffffff;
+          }
+          .line {
+            flex: 1;
+            margin-bottom: 7px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+          }
+        }
+      }
+    }
+    .close-wrapper {
+      position: relative;
+      height: 64px;
+      margin-top: -64px;
+      clear: both;
+    }
   }
 }
 </style>
