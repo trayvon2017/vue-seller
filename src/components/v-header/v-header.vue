@@ -51,7 +51,7 @@
         </div>
       </div>
       <div class="close-wrapper">2</div>
-    </div>
+    </div>233
   </div>
 </template>
 <script>
