@@ -18,12 +18,12 @@
           <span class="support-desc">{{ seller.supports[0].description }}</span>
         </div>
       </div>
-      <div class="sales">
-        <span class="count">5个</span>
+      <div @click="showDetail = true" v-show="seller.supports" class="sales">
+        <span class="count">{{seller.supports.length}}个</span>
         <i class="icon-keyboard_arrow_right"></i>
       </div>
     </div>
-    <div class="notice-wrapper">
+    <div @click="showDetail = true" class="notice-wrapper">
       <span class="notice-icon"></span>
       <span class="notice-text">{{seller.bulletin}}</span>
       <i class="icon-keyboard_arrow_right"></i>
@@ -40,18 +40,24 @@
             <div class="title">优惠信息</div>
             <div class="line"></div>
           </div>
-          <div
-            v-show="seller.supports"
-            v-for="(item,i) in seller.supports"
-            :key="i"
-            class="supports-wrapper"
-          >
-            <ico size="large" :type="`${supportsList[item.type]}_1`"></ico>
+          <ul v-show="seller.supports" class="supports-wrapper">
+            <li v-for="(item,i) in seller.supports" :key="i" class="support-item">
+              <ico size="large" :type="`${supportsList[item.type]}_1`"></ico>
+              <span class="support-text">{{item.description}}</span>
+            </li>
+          </ul>
+          <div class="sub-title">
+            <div class="line"></div>
+            <div class="title">商家公告</div>
+            <div class="line"></div>
           </div>
+          <p class="notice-content">{{seller.bulletin}}</p>
         </div>
       </div>
-      <div class="close-wrapper">2</div>
-    </div>233
+      <div class="close-wrapper">
+        <i @click="showDetail = false" class="icon-close"></i>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -73,7 +79,7 @@ export default {
   },
   data() {
     return {
-      showDetail: true,
+      showDetail: false,
       supportsList: ['decrease', 'discount', 'guarantee', 'invoice', 'special']
     }
   }
@@ -85,6 +91,7 @@ export default {
 .header {
   position: relative;
   background-color: rgba(7, 17, 27, 0.5);
+  overflow: hidden;
   .content-wrapper {
     position: relative;
     padding: 24px 0 18px 24px;
@@ -207,6 +214,7 @@ export default {
     right: 0;
     bottom: 0;
     background-color: rgba(7, 17, 27, 0.8);
+    backdrop-filter: blur(10px);
     z-index: 1;
     overflow: auto;
     color: white;
@@ -222,17 +230,18 @@ export default {
           text-align: center;
         }
         .star-wrapper {
-          margin: 16px 0 28px 0;
+          margin-top: 16px;
           text-align: center;
         }
         .sub-title {
           display: flex;
-          margin: 0 auto;
+          margin: 28px auto 24px auto;
           width: 80%;
           .title {
             padding: 0 12px;
             height: 14px;
             font-size: 14px;
+            font-weight: 700;
             line-height: 14px;
             color: #ffffff;
           }
@@ -242,6 +251,25 @@ export default {
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
           }
         }
+        .supports-wrapper {
+          margin: 0 auto;
+          padding-left: 12px;
+          width: 80%;
+          .support-item {
+            margin-bottom: 12px;
+            .support-text {
+              margin-left: 6px;
+              font-size: 12px;
+            }
+          }
+        }
+        .notice-content {
+          margin: 0 auto;
+          padding: 0 12px;
+          width: 80%;
+          font-size: 12px;
+          line-height: 24px;
+        }
       }
     }
     .close-wrapper {
@@ -249,6 +277,13 @@ export default {
       height: 64px;
       margin-top: -64px;
       clear: both;
+      .icon-close {
+        position: absolute;
+        left: 50%;
+        bottom: 32px;
+        transform: translateX(-50%);
+        font-size: 32px;
+      }
     }
   }
 }
