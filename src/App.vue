@@ -29,7 +29,6 @@ export default {
       .then(response => {
         if (response.data.errno === 0) {
           this.seller = response.data.data
-          console.log(this.seller)
         }
       })
       .catch(function(error) {
@@ -42,6 +41,9 @@ export default {
 <style lang="scss">
 @import '~common/scss/mixin.scss';
 @import '~common/scss/const.scss';
+#app {
+  height: 100%;
+}
 .tabs {
   display: flex;
   height: 40px;
