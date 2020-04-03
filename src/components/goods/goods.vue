@@ -10,10 +10,7 @@
           :class="{ active: i === menuItemIndex }"
         >
           <span class="text-wrapper">
-            <ico
-              v-if="goodCat.type >= 0"
-              :type="`${supportsList[goodCat.type]}_2`"
-            ></ico>
+            <ico v-if="goodCat.type >= 0" :type="`${supportsList[goodCat.type]}_2`"></ico>
             <span class="cat-name">{{ goodCat.name }}</span>
           </span>
         </li>
@@ -115,7 +112,6 @@ export default {
     },
     setMenuItemActive(pos) {
       let y = Math.abs(pos.y)
-      let previous = 0
       for (let i = 0; i < this.heightList.length; i++) {
         if (i === this.heightList.length - 1) {
           break
@@ -132,9 +128,9 @@ export default {
       this.menuItemIndex = i
       this.goodsScroll.off('scroll', this.setMenuItemActive)
       this.goodsScroll.scrollToElement(this.$refs.foodList[i], 300)
-      this.$nextTick(() => {
+      setTimeout(() => {
         this.goodsScroll.on('scroll', this.setMenuItemActive)
-      })
+      }, 300)
     }
   }
 }
