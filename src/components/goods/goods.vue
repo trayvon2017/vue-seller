@@ -111,7 +111,7 @@ export default {
       }
     },
     setMenuItemActive(pos) {
-      let y = Math.abs(pos.y)
+      let y = Math.abs(Math.round(pos.y))
       for (let i = 0; i < this.heightList.length; i++) {
         if (i === this.heightList.length - 1) {
           break
