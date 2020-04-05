@@ -48,11 +48,15 @@
                   </span>
                 </div>
               </div>
+              <div class="cart-control-wrapper">
+                <cart-control :food="good" @onAddToCart="onAddToCartClicked"></cart-control>
+              </div>
             </li>
           </ul>
         </li>
       </ul>
     </div>
+    <shop-cart ref="shopCart" :seller="seller" :selectedFoods="selectedFoods"></shop-cart>
   </div>
 </template>
 
@@ -60,10 +64,14 @@
 import axios from 'axios'
 import BScroll from '@better-scroll/core'
 import Ico from '../ico/ico.vue'
+import CartControl from '../cartcontrol/cartcontrol'
+import ShopCart from '../shopcart/shopcart'
 export default {
   name: 'Goods',
   components: {
-    Ico
+    Ico,
+    CartControl,
+    ShopCart
   },
   data() {
     return {
@@ -92,13 +100,14 @@ export default {
   },
   methods: {
     initScroll() {
+      // eslint-disable-next-line
       const menuScroll = new BScroll('.menu-wrapper', {
         click: true
       })
       this.goodsScroll = new BScroll('.goods-list-container', {
-        probeType: 3
+        probeType: 3,
+        click: true
       })
-      console.log(menuScroll)
       this.goodsScroll.on('scroll', this.setMenuItemActive)
     },
     calcHeightList() {
@@ -117,7 +126,6 @@ export default {
           break
         }
         if (y >= this.heightList[i] && y < this.heightList[i + 1]) {
-          console.log(i)
           this.menuItemIndex = i
           break
         }
@@ -131,6 +139,33 @@ export default {
       setTimeout(() => {
         this.goodsScroll.on('scroll', this.setMenuItemActive)
       }, 300)
+    },
+    onAddToCartClicked(evt) {
+      this.$refs.shopCart.onAddToCartClicked(evt.target)
+    }
+  },
+  computed: {
+    selectedFoods() {
+      let tempArr = []
+      this.goods.forEach(goodCat => {
+        goodCat.foods.forEach(food => {
+          if (food.count) {
+            tempArr.push(food)
+          }
+        })
+      })
+      return tempArr
+    }
+  },
+  props: {
+    seller: {
+      type: Object,
+      default() {
+        return {
+          deliveryPrice: 0,
+          minPrice: 0
+        }
+      }
     }
   }
 }
@@ -140,7 +175,7 @@ export default {
 @import '../../common/scss/mixin.scss';
 .goods-wrapper {
   display: flex;
-  height: calc(100% - 174px);
+  height: calc(100% - 222px);
   overflow: hidden;
   .menu-wrapper {
     flex: 0 0 80px;
@@ -190,6 +225,7 @@ export default {
         .goods-list {
           .good-item {
             display: flex;
+            position: relative;
             margin: 18px;
             &:last-child {
               margin-bottom: 0;
@@ -241,6 +277,11 @@ export default {
                   }
                 }
               }
+            }
+            .cart-control-wrapper {
+              position: absolute;
+              right: 0;
+              bottom: 0;
             }
           }
         }
