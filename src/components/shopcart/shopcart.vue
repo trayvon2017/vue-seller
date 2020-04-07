@@ -1,5 +1,5 @@
 <template>
-  <div class="shopcart-container" :class="{active: amount}">
+  <div @click="toogleFoodslist" class="shopcart-container" :class="{active: amount}">
     <div class="shopcart-left">
       <div class="shopcart-icon-wrapper">
         <div class="shopcart-icon">
@@ -18,35 +18,53 @@
           </span>
         </transition-group>
         <!-- <transition
-  v-on:before-enter="beforeEnter"
-  v-on:enter="enter"
-  v-on:after-enter="afterEnter"
-  v-on:enter-cancelled="enterCancelled"
+          v-on:before-enter="beforeEnter"
+          v-on:enter="enter"
+          v-on:after-enter="afterEnter"
+          v-on:enter-cancelled="enterCancelled"
 
-  v-on:before-leave="beforeLeave"
-  v-on:leave="leave"
-  v-on:after-leave="afterLeave"
-  v-on:leave-cancelled="leaveCancelled"
->
-        <span class="ball"></span>
+          v-on:before-leave="beforeLeave"
+          v-on:leave="leave"
+          v-on:after-leave="afterLeave"
+          v-on:leave-cancelled="leaveCancelled">
+            <span class="ball"></span>
         </transition>-->
       </div>
       <div class="shopcart-amount">&yen;{{amount}}</div>
       <div class="shopcart-desc">配送费{{seller.deliveryPrice}}元</div>
     </div>
-
     <div class="shopcart-right" :class="{active: available}">{{shopcartDesc}}</div>
+    <div v-show="showFoodslist" class="shopcart-foodslist-wrapper">
+      <div class="title-wrapper border-1px">
+        <span class="title">购物车</span>
+        <span class="clear">清空</span>
+      </div>
+      <ul class="foodslist">
+        <li v-for="(food,i) in selectedFoods" :key="i" class="foods-item">
+          <span class="name">{{food.name}}</span>
+          <div class="cartcontrol-wrapper">
+            <cart-control :food="food"></cart-control>
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script>
+import CartControl from '../cartcontrol/cartcontrol'
+
 export default {
   name: 'ShopCart',
+  components: {
+    CartControl
+  },
   data() {
     return {
       available: false,
       ballCount: 0,
-      balls: []
+      balls: [],
+      showFoodslist: false
     }
   },
   props: {
@@ -110,7 +128,6 @@ export default {
     },
     beforeEnter(el) {
       // x 40 y 19
-      console.log(el)
       let index = +el.getAttribute('data-index')
       let rect = this.balls[index]
       let y = -(window.innerHeight - rect.y - 30)
@@ -123,7 +140,7 @@ export default {
       el.style.display = 'inline-block'
     },
     enter(el, done) {
-      console.log(el)
+      // eslint-disable-next-line
       let rf = el.offsetHeight
       el.style.transform = 'translate3d(-50%,-50%,0)'
       let inner = el.getElementsByClassName('inner')[0]
@@ -136,13 +153,16 @@ export default {
     afterEnter(el) {
       this.ballCount--
       this.balls.shift()
-      console.log(el)
+    },
+    toogleFoodslist() {
+      this.showFoodslist = !this.showFoodslist
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+@import '../../common/scss/mixin.scss';
 .shopcart-container {
   display: flex;
   position: fixed;
@@ -246,6 +266,48 @@ export default {
     &.active {
       background-color: #00b43c;
       color: #fff;
+    }
+  }
+  .shopcart-foodslist-wrapper {
+    position: absolute;
+    bottom: 48px;
+    left: 0;
+    right: 0;
+    background-color: lightblue;
+    .title-wrapper {
+      padding: 0 18px;
+      height: 40px;
+      line-height: 40px;
+      background-color: #f3f5f7;
+      @include border-1px(rgba(7, 17, 27, 0.1));
+      .title {
+        float: left;
+        font-size: 14px;
+        color: rgb(7, 17, 27);
+      }
+      .clear {
+        float: right;
+        font-size: 12px;
+        color: rgb(0, 160, 220);
+      }
+    }
+    .foodslist {
+      max-height: 212px;
+      overflow: hidden;
+      background-color: #fff;
+      .foods-item {
+        padding: 12px 0;
+        margin: 0 18px;
+        .name {
+          color: rgb(7, 17, 27);
+          font-size: 14px;
+          line-height: 24px;
+        }
+        .cartcontrol-wrapper {
+          vertical-align: top;
+          float: right;
+        }
+      }
     }
   }
 }

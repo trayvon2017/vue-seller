@@ -6,7 +6,7 @@
       </div>
     </transition>
     <transition name="fade">
-      <div v-show="food.count" class="num">{{count}}</div>
+      <div v-show="food.count" class="num">{{showCount}}</div>
     </transition>
     <div class="add-icon" @click="addToCart($event)">
       <i class="icon-add_circle"></i>
@@ -32,6 +32,11 @@ export default {
       default() {
         return []
       }
+    }
+  },
+  computed: {
+    showCount() {
+      return this.food.count
     }
   },
   data() {
